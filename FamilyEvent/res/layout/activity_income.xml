@@ -1,0 +1,64 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgColor"
+    android:orientation="vertical"
+    tools:context=".MainListActivity" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#f00000" >
+
+        <Spinner
+            android:id="@+id/categorySpinner"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:spinnerMode="dropdown" />
+
+        <Button
+            android:id="@+id/sortDateBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/sortDateBtn" />
+
+        <Button
+            android:id="@+id/sortAmountBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/sortAmountBtn" />
+
+        <Button
+            android:id="@+id/sortNameBtn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/sortNameBtn" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/incomeList"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_weight="9"
+        android:background="@color/bgColor" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/emptyText"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20sp"
+        android:layout_weight="9"
+        android:text="@string/emptyListData"
+        android:visibility="gone" >
+    </TextView>
+
+</LinearLayout>
