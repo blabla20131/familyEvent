@@ -1,4 +1,4 @@
-package com.iris.utils;
+package com.iris.adapter;
 
 import java.util.ArrayList;
 
@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.iris.familyevent.R;
+import com.iris.utils.EntryItem;
+import com.iris.utils.Item;
+import com.iris.utils.SectionItem;
 
 public class EntryAdapter extends ArrayAdapter<Item> {
 
