@@ -5,5 +5,16 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_notice">공지사항</string>
-
+    <string name="app_name">FamilyEvent</string>
+    <string name="title_activity_detaile">DetaileActivity</string>
+    <string name="title_activity_create_category">CreateCategoryActivity</string>
+    <string name="title_activity_income">IncomeActivity</string>
+    <string name="title_activity_expense">ExpenseActivity</string>
+    <string name="title_activity_main_list">MainListActivity</string>
+    <string name="sortDateBtn">날짜순</string>
+    <string name="sortNameBtn">이름순</string>
+    <string name="sortAmountBtn">가격순</string>
+    <string name="emptyListData">데이터가 업습니다.</string>
+    <string name="writeBtn">글 쓰기</string>
+    <string name="calendarBtn">달력</string>
 </resources>

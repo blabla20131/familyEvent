@@ -3,6 +3,7 @@ package com.iris.utils;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,11 +41,13 @@ public class EntryAdapter extends ArrayAdapter<Item> {
                 v.setLongClickable(false);
 
                 final TextView sectionView = (TextView) v.findViewById(R.id.list_item_section_text);
+                sectionView.setTextColor(Color.WHITE);
                 sectionView.setText(si.getTitle());
             } else {
                 EntryItem ei = (EntryItem) i;
                 v = vi.inflate(R.layout.icon_list_item, null);
                 final TextView title = (TextView) v.findViewById(R.id.text1);
+
                 final ImageView img1 = (ImageView) v.findViewById(R.id.icon);
 
                 if (title != null)

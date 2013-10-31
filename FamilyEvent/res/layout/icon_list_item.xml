@@ -24,6 +24,7 @@
             android:gravity="center"
             android:paddingLeft="10dp"
             android:text="TextView"
+            android:textColor="#ffffff"
             android:textSize="20sp" />
 
     </LinearLayout>

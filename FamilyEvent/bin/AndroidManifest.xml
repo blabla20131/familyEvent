@@ -15,8 +15,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.iris.activity.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -56,6 +55,27 @@
         <activity
             android:name="com.iris.activity.ConfigActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.iris.activity.DetaileActivity"
+            android:label="@string/title_activity_detaile" >
+        </activity>
+        <activity
+            android:name="com.iris.activity.CreateCategoryActivity"
+            android:label="@string/title_activity_create_category"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name="com.iris.activity.IncomeActivity"
+            android:label="@string/title_activity_income" >
+        </activity>
+        <activity
+            android:name="com.iris.activity.ExpenseActivity"
+            android:label="@string/title_activity_expense" >
+        </activity>
+        <activity
+            android:name="com.iris.activity.MainListActivity"
+            android:label="@string/title_activity_main_list" >
         </activity>
     </application>
 

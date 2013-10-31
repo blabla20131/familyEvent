@@ -7,15 +7,25 @@ import java.util.Map;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.MenuDrawer.Type;
 import net.simonvt.menudrawer.Position;
-import android.app.Activity;
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.ActionBar.TabListener;
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.iris.constants.Constants;
@@ -23,15 +33,23 @@ import com.iris.familyevent.R;
 import com.iris.kakao.KakaoLink;
 import com.iris.utils.EntryAdapter;
 import com.iris.utils.EntryItem;
+import com.iris.utils.FamilyDbAdapter;
 import com.iris.utils.Item;
+import com.iris.utils.MainItem;
+import com.iris.utils.PageAdapter;
 import com.iris.utils.SectionItem;
 
-public class MainActivity extends Activity {
+@SuppressLint("NewApi")
+public class MainActivity extends FragmentActivity implements OnScrollListener, TabListener {
 
     MenuDrawer menuDrawerLeftMenu;
     ArrayList<Item> items = new ArrayList<Item>();
-    ListView mList;
+    ArrayList<MainItem> mainItems = new ArrayList<MainItem>();
+    ListView mList, mMainList;
+    FamilyDbAdapter familyDbAdapter;
+    ViewPager mPager;
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,33 +68,50 @@ public class MainActivity extends Activity {
 
         mList.setOnItemClickListener(mOnItemClickListener);
 
-        findViewById(R.id.calendarBtn).setOnClickListener(mClickListener);
-        findViewById(R.id.writeBtn).setOnClickListener(mClickListener);
-        findViewById(R.id.leftMenuBtn).setOnClickListener(mClickListener);
+        mPager = (ViewPager) findViewById(R.id.mainViewPager);
+
+        PageAdapter pageAdapter = new PageAdapter(getSupportFragmentManager(), this, mPager);
+        mPager.setCurrentItem(0);
+
+        final ActionBar bar = getActionBar();//액션바 얻어오기 버전 11이상부터 지원함 그밑으론 지원 no
+        bar.show();
+        bar.setHomeButtonEnabled(true); //홈버튼 작동 우린 메뉴버튼
+        bar.setTitle("경조사 가계부"); //액션바 타이틀설정
+
+        bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS); //액셔바 밑에 tab생성
+        pageAdapter.addTab(bar.newTab().setText("일정"), MainListActivity.class, null);
+        pageAdapter.addTab(bar.newTab().setText("수입"), IncomeActivity.class, null);
+        pageAdapter.addTab(bar.newTab().setText("지출"), ExpenseActivity.class, null);
     }
 
-    public void name(View v) throws NameNotFoundException {
-        finish();
-    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main, menu); //액션바 옵션연결
+        return true;
 
-    Button.OnClickListener mClickListener = new Button.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-            case R.id.leftMenuBtn:
-                menuDrawerLeftMenu.openMenu();
-                break;
-            case R.id.writeBtn:
-                Intent writeActivityIntent = new Intent(MainActivity.this, WriteActivity.class);
-                startActivity(writeActivityIntent);
-                break;
-            case R.id.calendarBtn:
-                Intent calendarActivityIntent = new Intent(MainActivity.this, CalendarActivity.class);
-                startActivity(calendarActivityIntent);
-                break;
-            }
-        }
     };
+
+    //액션바 클릭이벤
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+        case android.R.id.home:
+            menuDrawerLeftMenu.openMenu();
+            break;
+        case R.id.writeBtn:
+            Intent writeActivityIntent = new Intent(MainActivity.this, WriteActivity.class);
+            startActivity(writeActivityIntent);
+            break;
+        case R.id.calendarBtn:
+            Intent calendarActivityIntent = new Intent(MainActivity.this, CalendarActivity.class);
+            startActivity(calendarActivityIntent);
+            break;
+        }
+        return true;
+    }
 
     private final OnItemClickListener mOnItemClickListener = new OnItemClickListener()
     {
@@ -132,11 +167,17 @@ public class MainActivity extends Activity {
 
         /**
          * @param activity
-         * @param url: 유저에게 전달될 메세지에 포함되는 링크 url(모바일웹)
-         * @param message: 유저에게 전달될 메세지 내용(UTF-8)
-         * @param appId: App bundle id 또는 package id (예: com.company.app)정확히 입력하지않을 경우 이용이 제한될 수 있습니다.
-         * @param appVer: 3rd app의 버전
-         * @param appName: 3rd app의 정확한 이름
+         * @param url
+         *            : 유저에게 전달될 메세지에 포함되는 링크 url(모바일웹)
+         * @param message
+         *            : 유저에게 전달될 메세지 내용(UTF-8)
+         * @param appId
+         *            : App bundle id 또는 package id (예: com.company.app)정확히
+         *            입력하지않을 경우 이용이 제한될 수 있습니다.
+         * @param appVer
+         *            : 3rd app의 버전
+         * @param appName
+         *            : 3rd app의 정확한 이름
          * @param encoding
          */
         kakaoLink.openKakaoLink(this,
@@ -172,11 +213,17 @@ public class MainActivity extends Activity {
 
         /**
          * @param activity
-         * @param url: 유저에게 전달될 메세지에 포함되는 링크 url(모바일웹)
-         * @param message: 유저에게 전달될 메세지 내용(UTF-8)
-         * @param appId: App bundle id 또는 package id (예: com.company.app)정확히 입력하지않을 경우 이용이 제한될 수 있습니다.
-         * @param appVer: 3rd app의 버전
-         * @param appName: 3rd app의 정확한 이름
+         * @param url
+         *            : 유저에게 전달될 메세지에 포함되는 링크 url(모바일웹)
+         * @param message
+         *            : 유저에게 전달될 메세지 내용(UTF-8)
+         * @param appId
+         *            : App bundle id 또는 package id (예: com.company.app)정확히
+         *            입력하지않을 경우 이용이 제한될 수 있습니다.
+         * @param appVer
+         *            : 3rd app의 버전
+         * @param appName
+         *            : 3rd app의 정확한 이름
          * @param encoding
          * @param metaInfoArray
          */
@@ -198,5 +245,35 @@ public class MainActivity extends Activity {
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok, null)
                 .create().show();
+    }
+
+    @Override
+    public void onTabReselected(Tab tab, FragmentTransaction ft) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        // TODO Auto-generated method stub
+
     }
 }
